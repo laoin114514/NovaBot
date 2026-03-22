@@ -3,8 +3,8 @@ package zero
 import (
 	"testing"
 
+	"github.com/laoin114514/NovaBot/message"
 	"github.com/stretchr/testify/assert"
-	"github.com/wdvxdr1123/ZeroBot/message"
 )
 
 func TestType(t *testing.T) {

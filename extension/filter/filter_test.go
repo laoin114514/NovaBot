@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	zero "github.com/laoin114514/NovaBot"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
-	zero "github.com/wdvxdr1123/ZeroBot"
 )
 
 func TestFilter(t *testing.T) {

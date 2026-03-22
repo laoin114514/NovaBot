@@ -18,8 +18,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	zero "github.com/wdvxdr1123/ZeroBot"
-	"github.com/wdvxdr1123/ZeroBot/utils/helper"
+	zero "github.com/laoin114514/NovaBot"
+	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 type HTTP struct {

@@ -1,7 +1,7 @@
 package repeat
 
 import (
-	zero "github.com/wdvxdr1123/ZeroBot"
+	zero "github.com/laoin114514/NovaBot"
 )
 
 func init() { // 插件主体

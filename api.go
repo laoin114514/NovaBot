@@ -16,8 +16,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	"github.com/wdvxdr1123/ZeroBot/message"
-	"github.com/wdvxdr1123/ZeroBot/utils/helper"
+	"github.com/laoin114514/NovaBot/message"
+	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 var base64Reg = regexp.MustCompile(`"type":"image","data":\{"file":"base64://[\w/\+=]+`)
@@ -76,7 +76,6 @@ func (ctx *Ctx) CallActionWithContext(c context.Context, action string, params P
 	return rsp, nil
 }
 
-
 func (ctx *Ctx) callActionData(action string, params Params) (APIResult[gjson.Result], error) {
 	rsp, err := ctx.CallAction(action, params)
 	if err != nil {
@@ -106,7 +105,6 @@ func (ctx *Ctx) callActionOnlyResult(action string, params Params) (APIResult[st
 	}
 	return result, nil
 }
-
 
 // SendGroupMessage 发送群消息
 // https://github.com/botuniverse/onebot-11/blob/master/api/public.md#send_group_msg-%E5%8F%91%E9%80%81%E7%BE%A4%E6%B6%88%E6%81%AF

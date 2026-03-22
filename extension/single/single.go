@@ -5,7 +5,7 @@ import (
 
 	"github.com/RomiChan/syncx"
 
-	zero "github.com/wdvxdr1123/ZeroBot"
+	zero "github.com/laoin114514/NovaBot"
 )
 
 // Option 配置项

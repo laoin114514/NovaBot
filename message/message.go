@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wdvxdr1123/ZeroBot/utils/helper"
+	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 // Message impl the array form of message

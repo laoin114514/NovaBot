@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/laoin114514/NovaBot/message"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
-	"github.com/wdvxdr1123/ZeroBot/message"
 )
 
 type mockAPICaller struct{}

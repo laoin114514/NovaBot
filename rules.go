@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wdvxdr1123/ZeroBot/message"
-	"github.com/wdvxdr1123/ZeroBot/utils/helper"
+	"github.com/laoin114514/NovaBot/message"
+	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 // Type check the ctx.Event's type

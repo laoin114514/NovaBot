@@ -1,4 +1,4 @@
-module github.com/wdvxdr1123/ZeroBot
+module github.com/laoin114514/NovaBot
 
 go 1.20
 

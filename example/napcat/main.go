@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	zero "github.com/wdvxdr1123/ZeroBot"
-	"github.com/wdvxdr1123/ZeroBot/message"
+	zero "github.com/laoin114514/NovaBot"
+	"github.com/laoin114514/NovaBot/message"
 )
 
 func init() {

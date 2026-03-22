@@ -3,7 +3,7 @@ package shell
 import (
 	"github.com/sirupsen/logrus"
 
-	zero "github.com/wdvxdr1123/ZeroBot"
+	zero "github.com/laoin114514/NovaBot"
 )
 
 // ShellRule Example

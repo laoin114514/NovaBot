@@ -7,7 +7,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/wdvxdr1123/ZeroBot/message"
+	"github.com/laoin114514/NovaBot/message"
 )
 
 // Modified from https://github.com/catsworld/qq-bot-api

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	zero "github.com/wdvxdr1123/ZeroBot"
-	"github.com/wdvxdr1123/ZeroBot/example/manager"
-	"github.com/wdvxdr1123/ZeroBot/extension"
-	"github.com/wdvxdr1123/ZeroBot/extension/rate"
-	"github.com/wdvxdr1123/ZeroBot/extension/single"
-	"github.com/wdvxdr1123/ZeroBot/message"
+	zero "github.com/laoin114514/NovaBot"
+	"github.com/laoin114514/NovaBot/example/manager"
+	"github.com/laoin114514/NovaBot/extension"
+	"github.com/laoin114514/NovaBot/extension/rate"
+	"github.com/laoin114514/NovaBot/extension/single"
+	"github.com/laoin114514/NovaBot/message"
 )
 
 var (

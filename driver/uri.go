@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/wdvxdr1123/ZeroBot/utils/helper"
+	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 func resolveURI(addr string) (network, address string) {

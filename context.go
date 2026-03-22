@@ -6,7 +6,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/wdvxdr1123/ZeroBot/message"
+	"github.com/laoin114514/NovaBot/message"
 )
 
 // Ctx represents the Context which hold the event.

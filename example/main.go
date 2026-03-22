@@ -4,12 +4,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	easy "github.com/t-tomalak/logrus-easy-formatter"
 
-	zero "github.com/wdvxdr1123/ZeroBot"
-	"github.com/wdvxdr1123/ZeroBot/driver"
-	_ "github.com/wdvxdr1123/ZeroBot/example/command"
-	_ "github.com/wdvxdr1123/ZeroBot/example/music"
-	_ "github.com/wdvxdr1123/ZeroBot/example/napcat"
-	_ "github.com/wdvxdr1123/ZeroBot/example/repeat"
+	zero "github.com/laoin114514/NovaBot"
+	"github.com/laoin114514/NovaBot/driver"
+	_ "github.com/laoin114514/NovaBot/example/command"
+	_ "github.com/laoin114514/NovaBot/example/music"
+	_ "github.com/laoin114514/NovaBot/example/napcat"
+	_ "github.com/laoin114514/NovaBot/example/repeat"
 )
 
 func init() {

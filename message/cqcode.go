@@ -5,7 +5,7 @@ import (
 
 	"github.com/tidwall/gjson"
 
-	"github.com/wdvxdr1123/ZeroBot/utils/helper"
+	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 // Modified from https://github.com/catsworld/qq-bot-api
