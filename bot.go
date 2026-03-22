@@ -247,7 +247,11 @@ func processEventAsync(response []byte, caller APICaller, maxwait time.Duration)
 // match 匹配规则，处理事件
 func match(ctx *Ctx, idx uintptr, matchers []*Matcher, maxwait time.Duration) {
 	if BotConfig.MarkMessage && ctx.Event.MessageID != nil {
-		go ctx.MarkThisMessageAsRead()
+		go func() {
+			if _, err := ctx.MarkThisMessageAsRead(); err != nil {
+				log.Warnln("[bot]", "["+strconv.FormatUint(uint64(idx), 10)+"]", "标记消息已读失败:", err)
+			}
+		}()
 	}
 	gorule := func(rule Rule) <-chan bool {
 		ch := make(chan bool, 1)

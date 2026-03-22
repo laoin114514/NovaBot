@@ -54,7 +54,9 @@ func init() {
 				}
 			}
 			zero.RangeBot(func(_ int64, ctx2 *zero.Ctx) bool { // test the range bot function
-				ctx2.SendGroupMessage(ctx.Event.GroupID, message.Music("163", queryNeteaseMusic(cmd.Args)))
+				if _, err := ctx2.SendGroupMessage(ctx.Event.GroupID, message.Music("163", queryNeteaseMusic(cmd.Args))); err != nil {
+					ctx.Send("发送音乐卡片失败: " + err.Error())
+				}
 				return true
 			})
 			// ctx.Send(message.Music("163", queryNeteaseMusic(cmd.Args)))

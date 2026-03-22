@@ -84,18 +84,6 @@ func (ctx *Ctx) callActionData(action string, params Params) (APIResult[gjson.Re
 	return APIResult[gjson.Result]{Value: rsp.Data, Resp: rsp}, nil
 }
 
-func (ctx *Ctx) callActionDataResult(action string, params Params) (APIResult[gjson.Result], error) {
-	rsp, err := ctx.CallAction(action, params)
-	if err != nil {
-		return APIResult[gjson.Result]{}, err
-	}
-	return APIResult[gjson.Result]{Value: rsp.Data, Resp: rsp}, nil
-}
-
-func (ctx *Ctx) callActionOnly(action string, params Params) error {
-	_, err := ctx.CallAction(action, params)
-	return err
-}
 
 func (ctx *Ctx) callActionOnlyResult(action string, params Params) (APIResult[struct{}], error) {
 	rsp, err := ctx.CallAction(action, params)
