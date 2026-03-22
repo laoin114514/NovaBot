@@ -1,4 +1,4 @@
-package zero
+package nova
 
 import (
 	"hash/crc64"

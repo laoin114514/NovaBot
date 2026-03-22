@@ -1,4 +1,4 @@
-package zero
+package nova
 
 import (
 	"bytes"
@@ -83,7 +83,6 @@ func (ctx *Ctx) callActionData(action string, params Params) (APIResult[gjson.Re
 	}
 	return APIResult[gjson.Result]{Value: rsp.Data, Resp: rsp}, nil
 }
-
 
 func (ctx *Ctx) callActionOnlyResult(action string, params Params) (APIResult[struct{}], error) {
 	rsp, err := ctx.CallAction(action, params)

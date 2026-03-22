@@ -1,4 +1,4 @@
-package zero
+package nova
 
 // FutureEvent 是 ZeroBot 交互式的核心，用于异步获取指定事件
 type FutureEvent struct {
