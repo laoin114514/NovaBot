@@ -99,29 +99,29 @@ func (ctx *Ctx) Send(msg interface{}) message.ID {
 	if ok && len(m) > 0 && m[0].Type == "node" && event.DetailType != "guild" {
 		if event.GroupID != 0 {
 			if rsp, err := ctx.SendGroupForwardMessage(event.GroupID, m); err == nil {
-				return message.NewMessageIDFromInteger(rsp.Get("message_id").Int())
+				return message.NewMessageIDFromInteger(rsp.Value.Get("message_id").Int())
 			}
 			return message.NewMessageIDFromInteger(0)
 		}
 		if rsp, err := ctx.SendPrivateForwardMessage(event.UserID, m); err == nil {
-			return message.NewMessageIDFromInteger(rsp.Get("message_id").Int())
+			return message.NewMessageIDFromInteger(rsp.Value.Get("message_id").Int())
 		}
 		return message.NewMessageIDFromInteger(0)
 	}
 	if event.DetailType == "guild" {
-		if mid, err := ctx.SendGuildChannelMessage(event.GuildID, event.ChannelID, msg); err == nil {
-			return message.NewMessageIDFromString(mid)
+		if res, err := ctx.SendGuildChannelMessage(event.GuildID, event.ChannelID, msg); err == nil {
+			return message.NewMessageIDFromString(res.Value)
 		}
 		return message.NewMessageIDFromString("0")
 	}
 	if event.GroupID != 0 {
-		if mid, err := ctx.SendGroupMessage(event.GroupID, msg); err == nil {
-			return message.NewMessageIDFromInteger(mid)
+		if res, err := ctx.SendGroupMessage(event.GroupID, msg); err == nil {
+			return message.NewMessageIDFromInteger(res.Value)
 		}
 		return message.NewMessageIDFromInteger(0)
 	}
-	if mid, err := ctx.SendPrivateMessage(event.UserID, msg); err == nil {
-		return message.NewMessageIDFromInteger(mid)
+	if res, err := ctx.SendPrivateMessage(event.UserID, msg); err == nil {
+		return message.NewMessageIDFromInteger(res.Value)
 	}
 	return message.NewMessageIDFromInteger(0)
 }

@@ -270,14 +270,14 @@ func GroupHigherPermission(gettarget func(ctx *Ctx) int64) Rule {
 			if err != nil {
 				return false
 			}
-			return !issu(target) && info.Get("role").Str != "owner"
+			return !issu(target) && info.Value.Get("role").Str != "owner"
 		}
 		if ctx.Event.Sender.Role == "admin" {
 			info, err := ctx.GetThisGroupMemberInfo(target, false)
 			if err != nil {
 				return false
 			}
-			tgtrole := info.Get("role").Str
+			tgtrole := info.Value.Get("role").Str
 			return !issu(target) && tgtrole != "owner" && tgtrole != "admin"
 		}
 		return false // member is the lowest

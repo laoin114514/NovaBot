@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 
 	zero "github.com/wdvxdr1123/ZeroBot"
@@ -23,9 +24,10 @@ func main() {
 func like() {
 	zero.OnFullMatch("赞我").Handle(func(ctx *zero.Ctx) {
 		userID := ctx.Event.UserID
-		err := ctx.SendLike(userID, 10)
+		rsp, err := ctx.SendLike(userID, 10)
 		if err != nil {
-			ctx.Send(message.At(userID).String() + " 点赞失败: " + err.Error())
+			fmt.Println(rsp)
+			ctx.Send(message.At(userID).String() + rsp.Resp.Message)
 			return
 		}
 		ctx.Send(message.At(userID).String() + " 已点赞，注意查收" + message.Face(rand.Intn(200)).String())

@@ -26,6 +26,12 @@ type APIResponse struct {
 	Echo    uint64       `json:"echo"`
 }
 
+// APIResult wraps typed business value with raw API response.
+type APIResult[T any] struct {
+	Value T
+	Resp  APIResponse
+}
+
 // APIRequest is the request sending to the cqhttp
 // https://github.com/botuniverse/onebot-11/blob/master/communication/ws.md
 type APIRequest struct {
