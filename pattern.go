@@ -29,8 +29,8 @@ func (p *Pattern) AsRule() Rule {
 		for i := 0; i < len(ctx.Event.Message); i++ {
 			if i > 0 && ctx.Event.Message[i-1].Type == "reply" && ctx.Event.Message[i].Type == "at" {
 				// [reply][at]
-				reply := ctx.GetMessage(ctx.Event.Message[i-1].Data["id"], true)
-				if reply.MessageID.ID() != 0 && reply.Sender != nil && reply.Sender.ID != 0 && strconv.FormatInt(reply.Sender.ID, 10) == ctx.Event.Message[i].Data["qq"] {
+				reply, err := ctx.GetMessage(ctx.Event.Message[i-1].Data["id"], true)
+				if err == nil && reply.MessageID.ID() != 0 && reply.Sender != nil && reply.Sender.ID != 0 && strconv.FormatInt(reply.Sender.ID, 10) == ctx.Event.Message[i].Data["qq"] {
 					continue
 				}
 			}
@@ -67,7 +67,9 @@ func (ctx *Ctx) splitAtInText(index int) []message.Segment {
 		if err != nil {
 			// assume is username
 			if list == nil {
-				list = ctx.GetThisGroupMemberList().Array()
+				if members, err := ctx.GetThisGroupMemberList(); err == nil {
+					list = members.Array()
+				}
 			}
 			for _, member := range list {
 				if member.Get("card").Str != ats[i][1] && member.Get("nickname").Str != ats[i][1] {

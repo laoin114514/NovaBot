@@ -98,17 +98,32 @@ func (ctx *Ctx) Send(msg interface{}) message.ID {
 	}
 	if ok && len(m) > 0 && m[0].Type == "node" && event.DetailType != "guild" {
 		if event.GroupID != 0 {
-			return message.NewMessageIDFromInteger(ctx.SendGroupForwardMessage(event.GroupID, m).Get("message_id").Int())
+			if rsp, err := ctx.SendGroupForwardMessage(event.GroupID, m); err == nil {
+				return message.NewMessageIDFromInteger(rsp.Get("message_id").Int())
+			}
+			return message.NewMessageIDFromInteger(0)
 		}
-		return message.NewMessageIDFromInteger(ctx.SendPrivateForwardMessage(event.UserID, m).Get("message_id").Int())
+		if rsp, err := ctx.SendPrivateForwardMessage(event.UserID, m); err == nil {
+			return message.NewMessageIDFromInteger(rsp.Get("message_id").Int())
+		}
+		return message.NewMessageIDFromInteger(0)
 	}
 	if event.DetailType == "guild" {
-		return message.NewMessageIDFromString(ctx.SendGuildChannelMessage(event.GuildID, event.ChannelID, msg))
+		if mid, err := ctx.SendGuildChannelMessage(event.GuildID, event.ChannelID, msg); err == nil {
+			return message.NewMessageIDFromString(mid)
+		}
+		return message.NewMessageIDFromString("0")
 	}
 	if event.GroupID != 0 {
-		return message.NewMessageIDFromInteger(ctx.SendGroupMessage(event.GroupID, msg))
+		if mid, err := ctx.SendGroupMessage(event.GroupID, msg); err == nil {
+			return message.NewMessageIDFromInteger(mid)
+		}
+		return message.NewMessageIDFromInteger(0)
 	}
-	return message.NewMessageIDFromInteger(ctx.SendPrivateMessage(event.UserID, msg))
+	if mid, err := ctx.SendPrivateMessage(event.UserID, msg); err == nil {
+		return message.NewMessageIDFromInteger(mid)
+	}
+	return message.NewMessageIDFromInteger(0)
 }
 
 // SendChain 快捷发送消息/合并转发-消息链
