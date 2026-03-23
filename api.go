@@ -68,10 +68,9 @@ func (ctx *Ctx) CallActionWithContext(c context.Context, action string, params P
 		log.Errorln("[api] 调用", action, "时出现错误: ", err)
 		return rsp, err
 	}
-	if rsp.RetCode != 0 {
-		err = fmt.Errorf("api %s failed: retcode=%d message=%s wording=%s", action, rsp.RetCode, rsp.Message, rsp.Wording)
-		log.Errorln("[api] 调用", action, "时出现错误, 返回值:", rsp.RetCode, ", 信息:", rsp.Message, "解释:", rsp.Wording)
-		return rsp, err
+	if apiErr := rsp.AsError(action); apiErr != nil {
+		log.Errorln("[api] 调用", action, "时出现错误, status:", rsp.Status, "返回值:", rsp.RetCode, ", 信息:", rsp.Message, "解释:", rsp.Wording)
+		return rsp, apiErr
 	}
 	return rsp, nil
 }

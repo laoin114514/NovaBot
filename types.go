@@ -26,6 +26,49 @@ type APIResponse struct {
 	Echo    uint64       `json:"echo"`
 }
 
+// IsSuccess reports whether the API response should be treated as success.
+func (r APIResponse) IsSuccess() bool {
+	if r.RetCode == 0 {
+		return true
+	}
+	return r.Status == "ok"
+}
+
+// APIError represents a non-success response returned by onebot API.
+type APIError struct {
+	Action  string
+	Status  string
+	RetCode int64
+	Message string
+	Wording string
+	Echo    uint64
+}
+
+func (e *APIError) Error() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if e.Wording != "" {
+		return "api " + e.Action + " failed: retcode=" + strconv.FormatInt(e.RetCode, 10) + " status=" + e.Status + " message=" + e.Message + " wording=" + e.Wording
+	}
+	return "api " + e.Action + " failed: retcode=" + strconv.FormatInt(e.RetCode, 10) + " status=" + e.Status + " message=" + e.Message
+}
+
+// AsError converts response status into typed error when API call failed.
+func (r APIResponse) AsError(action string) error {
+	if r.IsSuccess() {
+		return nil
+	}
+	return &APIError{
+		Action:  action,
+		Status:  r.Status,
+		RetCode: r.RetCode,
+		Message: r.Message,
+		Wording: r.Wording,
+		Echo:    r.Echo,
+	}
+}
+
 // APIResult wraps typed business value with raw API response.
 type APIResult[T any] struct {
 	Value T
