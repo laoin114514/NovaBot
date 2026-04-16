@@ -5,7 +5,7 @@ import (
 
 	"github.com/RomiChan/syncx"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 )
 
 // Option 配置项
@@ -14,19 +14,19 @@ type Option[K comparable] func(*Single[K])
 // Single 反并发
 type Single[K comparable] struct {
 	group syncx.Map[K, struct{}]
-	key   func(ctx *zero.Ctx) K
-	post  func(ctx *zero.Ctx)
+	key   func(ctx *nova.Ctx) K
+	post  func(ctx *nova.Ctx)
 }
 
 // WithKeyFn 指定反并发的 Key
-func WithKeyFn[K comparable](fn func(ctx *zero.Ctx) K) Option[K] {
+func WithKeyFn[K comparable](fn func(ctx *nova.Ctx) K) Option[K] {
 	return func(s *Single[K]) {
 		s.key = fn
 	}
 }
 
 // WithPostFn 指定反并发拦截后的操作
-func WithPostFn[K comparable](fn func(ctx *zero.Ctx)) Option[K] {
+func WithPostFn[K comparable](fn func(ctx *nova.Ctx)) Option[K] {
 	return func(s *Single[K]) {
 		s.post = fn
 	}
@@ -42,8 +42,8 @@ func New[K comparable](op ...Option[K]) *Single[K] {
 }
 
 // Apply 为指定 Engine 添加反并发功能
-func (s *Single[K]) Apply(engine *zero.Engine) {
-	engine.UseMidHandler(func(ctx *zero.Ctx) bool {
+func (s *Single[K]) Apply(engine *nova.Engine) {
+	engine.UseMidHandler(func(ctx *nova.Ctx) bool {
 		if s.key == nil {
 			return true
 		}
@@ -56,7 +56,7 @@ func (s *Single[K]) Apply(engine *zero.Engine) {
 		}
 		s.group.Store(key, struct{}{})
 		ctx.State["__single-key__"] = key
-		runtime.SetFinalizer(ctx, func(ctx *zero.Ctx) { // 防止任务因 panic 使反并发无法回收
+		runtime.SetFinalizer(ctx, func(ctx *nova.Ctx) { // 防止任务因 panic 使反并发无法回收
 			if k, ok := ctx.State["__single-key__"].(K); ok {
 				s.group.Delete(k)
 			}
@@ -64,7 +64,7 @@ func (s *Single[K]) Apply(engine *zero.Engine) {
 		return true
 	})
 
-	engine.UsePostHandler(func(ctx *zero.Ctx) {
+	engine.UsePostHandler(func(ctx *nova.Ctx) {
 		s.group.Delete(ctx.State["__single-key__"].(K))
 	})
 }

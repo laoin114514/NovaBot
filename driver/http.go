@@ -18,7 +18,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
@@ -33,14 +33,14 @@ func (h *HTTP) Connect() {
 	log.Infof("[httpcaller] 正在尝试与服务器握手: %s", h.caller.URL)
 	c, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	rsp, err := h.caller.CallAPI(c, zero.APIRequest{Action: "get_login_info", Params: nil})
+	rsp, err := h.caller.CallAPI(c, nova.APIRequest{Action: "get_login_info", Params: nil})
 	if err != nil {
 		log.Warningf("[httpcaller] 与服务器握手失败: %s\n%v", h.caller.URL, err)
 		return
 	}
 	if rsp.RetCode == 0 {
 		h.caller.selfID = rsp.Data.Get("user_id").Int()
-		zero.APICallers.Store(h.caller.selfID, h.caller) // 添加Caller到 APICaller list...
+		nova.APICallers.Store(h.caller.selfID, h.caller) // 添加Caller到 APICaller list...
 		log.Infof("[httpcaller] 与服务器 %s 握手成功, 账号: %d", h.caller.URL, h.caller.selfID)
 	} else {
 		log.Warningf("[httpcaller] 与服务器握手失败: %s", h.caller.URL)
@@ -82,7 +82,7 @@ func (h *HTTP) listen() {
 }
 
 // any 处理所有 API 请求
-func (h *HTTP) any(w http.ResponseWriter, r *http.Request, apiHandler func([]byte, zero.APICaller)) {
+func (h *HTTP) any(w http.ResponseWriter, r *http.Request, apiHandler func([]byte, nova.APICaller)) {
 	if r.Method != http.MethodPost {
 		log.Warningf("[httpserver] 已拒绝 %s 请求: 不支持的请求方法 %s", r.RemoteAddr, r.Method)
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -121,7 +121,7 @@ func (h *HTTP) any(w http.ResponseWriter, r *http.Request, apiHandler func([]byt
 }
 
 // Listen 监听 HTTP 请求
-func (h *HTTP) Listen(handler func([]byte, zero.APICaller)) {
+func (h *HTTP) Listen(handler func([]byte, nova.APICaller)) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		h.any(w, r, handler)
@@ -159,7 +159,7 @@ func (c *HTTPCaller) httpCaller(ctx context.Context, action string, payload []by
 
 	header := req.Header
 	header.Set("X-Client-Role", "Universal")
-	header.Set("User-Agent", "ZeroBot/1.6.3")
+	header.Set("User-Agent", "NovaBot/0.1.0")
 
 	if c.AccessToken != "" {
 		header.Set("Authorization", "Bearer "+c.AccessToken)
@@ -172,7 +172,7 @@ func (c *HTTPCaller) httpCaller(ctx context.Context, action string, payload []by
 	return resp, nil
 }
 
-func (c *HTTPCaller) CallAPI(ctx context.Context, req zero.APIRequest) (zero.APIResponse, error) {
+func (c *HTTPCaller) CallAPI(ctx context.Context, req nova.APIRequest) (nova.APIResponse, error) {
 	p, err := json.Marshal(req.Params)
 	if err != nil {
 		return nullResponse, err
@@ -191,14 +191,14 @@ func (c *HTTPCaller) CallAPI(ctx context.Context, req zero.APIRequest) (zero.API
 	}
 	payload := helper.BytesToString(content)
 	if resp.StatusCode != http.StatusOK {
-		return zero.APIResponse{Status: payload, RetCode: int64(1000 + resp.StatusCode)}, fmt.Errorf("caller返回错误: %d", resp.StatusCode)
+		return nova.APIResponse{Status: payload, RetCode: int64(1000 + resp.StatusCode)}, fmt.Errorf("caller返回错误: %d", resp.StatusCode)
 	}
 	rsp := gjson.Parse(payload)
 	msg := rsp.Get("message").Str
 	if msg != "" {
 		msg = rsp.Get("msg").Str
 	}
-	return zero.APIResponse{
+	return nova.APIResponse{
 		Status:  rsp.Get("status").Str,
 		Data:    rsp.Get("data"),
 		Message: msg,

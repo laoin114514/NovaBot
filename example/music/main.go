@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/laoin114514/NovaBot/example/manager"
 	"github.com/laoin114514/NovaBot/extension"
 	"github.com/laoin114514/NovaBot/extension/rate"
@@ -18,13 +18,13 @@ var (
 )
 
 func init() {
-	engine := zero.New()
+	engine := nova.New()
 
 	single.New(
-		single.WithKeyFn(func(ctx *zero.Ctx) int64 {
+		single.WithKeyFn(func(ctx *nova.Ctx) int64 {
 			return ctx.Event.UserID
 		}),
-		single.WithPostFn[int64](func(ctx *zero.Ctx) {
+		single.WithPostFn[int64](func(ctx *nova.Ctx) {
 			ctx.Send("您有操作正在执行，请稍后再试!")
 		}),
 	).Apply(engine)
@@ -32,7 +32,7 @@ func init() {
 	_ = engine.OnCommandGroup([]string{"music", "点歌"}).
 		SetBlock(true).
 		SetPriority(8).
-		Handle(func(ctx *zero.Ctx) {
+		Handle(func(ctx *nova.Ctx) {
 			var cmd extension.CommandModel
 			err := ctx.Parse(&cmd)
 			if err != nil {
@@ -53,7 +53,7 @@ func init() {
 					ctx.Send("歌曲名不合法oxo")
 				}
 			}
-			zero.RangeBot(func(_ int64, ctx2 *zero.Ctx) bool { // test the range bot function
+			nova.RangeBot(func(_ int64, ctx2 *nova.Ctx) bool { // test the range bot function
 				if _, err := ctx2.SendGroupMessage(ctx.Event.GroupID, message.Music("163", queryNeteaseMusic(cmd.Args))); err != nil {
 					ctx.Send("发送音乐卡片失败: " + err.Error())
 				}
@@ -63,7 +63,7 @@ func init() {
 		})
 	engine.UsePreHandler(m.Handler())
 
-	engine.UseMidHandler(func(ctx *zero.Ctx) bool { // 限速器
+	engine.UseMidHandler(func(ctx *nova.Ctx) bool { // 限速器
 		if !limit.Load(ctx.Event.UserID).Acquire() {
 			ctx.Send("您的请求太快，请稍后重试0x0...")
 			return false

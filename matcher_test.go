@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-// https://github.com/wdvxdr1123/ZeroBot/issues/82
 func Test_sortMatcher(t *testing.T) {
 	block := 10
 	batch := 10

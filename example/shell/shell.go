@@ -3,7 +3,7 @@ package shell
 import (
 	"github.com/sirupsen/logrus"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 )
 
 // ShellRule Example
@@ -18,7 +18,7 @@ type Ping struct {
 }
 
 func init() {
-	zero.OnShell("ping", Ping{}).Handle(func(ctx *zero.Ctx) {
+	nova.OnShell("ping", Ping{}).Handle(func(ctx *nova.Ctx) {
 		ping := ctx.State["flag"].(*Ping) // Note: 指针类型
 		logrus.Infoln("ping host:", ping.Host)
 		logrus.Infoln("ping timeout:", ping.Timeout)

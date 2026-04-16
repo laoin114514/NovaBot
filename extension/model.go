@@ -1,41 +1,41 @@
 package extension
 
-import zero "github.com/laoin114514/NovaBot"
+import nova "github.com/laoin114514/NovaBot"
 
-// PrefixModel is model of zero.PrefixRule
+// PrefixModel is model of nova.PrefixRule
 type PrefixModel struct {
-	Prefix string `zero:"prefix"`
-	Args   string `zero:"args"`
+	Prefix string `nova:"prefix"`
+	Args   string `nova:"args"`
 }
 
-// SuffixModel is model of zero.SuffixRule
+// SuffixModel is model of nova.SuffixRule
 type SuffixModel struct {
-	Suffix string `zero:"suffix"`
-	Args   string `zero:"args"`
+	Suffix string `nova:"suffix"`
+	Args   string `nova:"args"`
 }
 
-// CommandModel is model of zero.CommandRule
+// CommandModel is model of nova.CommandRule
 type CommandModel struct {
-	Command string `zero:"command"`
-	Args    string `zero:"args"`
+	Command string `nova:"command"`
+	Args    string `nova:"args"`
 }
 
-// KeywordModel is model of zero.KeywordRule
+// KeywordModel is model of nova.KeywordRule
 type KeywordModel struct {
-	Keyword string `zero:"keyword"`
+	Keyword string `nova:"keyword"`
 }
 
-// FullMatchModel is model of zero.FullMatchRule
+// FullMatchModel is model of nova.FullMatchRule
 type FullMatchModel struct {
-	Matched string `zero:"matched"`
+	Matched string `nova:"matched"`
 }
 
-// RegexModel is model of zero.RegexRule
+// RegexModel is model of nova.RegexRule
 type RegexModel struct {
-	Matched []string `zero:"regex_matched"`
+	Matched []string `nova:"regex_matched"`
 }
 
-// PatternModel is model of zero.PatternRule
+// PatternModel is model of nova.PatternRule
 type PatternModel struct {
-	Matched []zero.PatternParsed `zero:"pattern_matched"`
+	Matched []nova.PatternParsed `nova:"pattern_matched"`
 }

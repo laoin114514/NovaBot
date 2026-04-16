@@ -1,15 +1,15 @@
 package repeat
 
 import (
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 )
 
 func init() { // 插件主体
-	engine := zero.New()
-	engine.OnCommand("开启复读", zero.OnlyToMe).SetBlock(true).SetPriority(10).
-		Handle(func(ctx *zero.Ctx) {
-			stop, cancelStop := zero.NewFutureEvent("message", 8, true,
-				zero.CommandRule("关闭复读"), // 关闭复读指令
+	engine := nova.New()
+	engine.OnCommand("开启复读", nova.OnlyToMe).SetBlock(true).SetPriority(10).
+		Handle(func(ctx *nova.Ctx) {
+			stop, cancelStop := nova.NewFutureEvent("message", 8, true,
+				nova.CommandRule("关闭复读"), // 关闭复读指令
 				ctx.CheckSession()).      // 只有开启者可以关闭复读模式
 				Repeat()                  // 关闭需要一次
 			defer cancelStop()

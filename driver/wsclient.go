@@ -15,12 +15,12 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
 var (
-	nullResponse = zero.APIResponse{}
+	nullResponse = nova.APIResponse{}
 )
 
 // WSClient ...
@@ -47,7 +47,7 @@ func (ws *WSClient) Connect() {
 	log.Infof("[ws] 开始尝试连接到Websocket服务器: %v", ws.URL)
 	header := http.Header{
 		"X-Client-Role": []string{"Universal"},
-		"User-Agent":    []string{"ZeroBot/1.6.3"},
+		"User-Agent":    []string{"novaBot/1.6.3"},
 	}
 	if ws.AccessToken != "" {
 		header["Authorization"] = []string{"Bearer " + ws.AccessToken}
@@ -90,18 +90,18 @@ func (ws *WSClient) Connect() {
 			continue
 		}
 		ws.selfID = rsp.SelfID
-		zero.APICallers.Store(ws.selfID, ws) // 添加Caller到 APICaller list...
+		nova.APICallers.Store(ws.selfID, ws) // 添加Caller到 APICaller list...
 		log.Infof("[ws] 连接Websocket服务器: %s 成功, 账号: %d", ws.URL, rsp.SelfID)
 		break
 	}
 }
 
 // Listen 开始监听事件
-func (ws *WSClient) Listen(handler func([]byte, zero.APICaller)) {
+func (ws *WSClient) Listen(handler func([]byte, nova.APICaller)) {
 	for {
 		t, payload, err := ws.conn.ReadMessage()
 		if err != nil { // reconnect
-			zero.APICallers.Delete(ws.selfID) // 断开从apicaller中删除
+			nova.APICallers.Delete(ws.selfID) // 断开从apicaller中删除
 			log.Warn("[ws] Websocket服务器连接断开...")
 			time.Sleep(time.Millisecond * time.Duration(3))
 			ws.Connect()
@@ -118,7 +118,7 @@ func (ws *WSClient) Listen(handler func([]byte, zero.APICaller)) {
 				if msg == "" {
 					msg = rsp.Get("msg").Str
 				}
-				c <- zero.APIResponse{ // 发送api调用响应
+				c <- nova.APIResponse{ // 发送api调用响应
 					Status:  rsp.Get("status").String(),
 					Data:    rsp.Get("data"),
 					Message: msg,
@@ -143,8 +143,8 @@ func (ws *WSClient) nextSeq() uint64 {
 }
 
 // CallAPI 发送ws请求
-func (ws *WSClient) CallAPI(c context.Context, req zero.APIRequest) (zero.APIResponse, error) {
-	ch := make(chan zero.APIResponse, 1)
+func (ws *WSClient) CallAPI(c context.Context, req nova.APIRequest) (nova.APIResponse, error) {
+	ch := make(chan nova.APIResponse, 1)
 	req.Echo = ws.nextSeq()
 	ws.seqMap.Store(req.Echo, ch)
 

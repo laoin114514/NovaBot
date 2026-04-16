@@ -62,7 +62,7 @@ func (ctx *Ctx) Parse(model interface{}) (err error) {
 		modelDec = decoder{}
 		for i := 0; i < t.NumField(); i++ {
 			t1 := t.Field(i)
-			if key, ok := t1.Tag.Lookup("zero"); ok {
+			if key, ok := t1.Tag.Lookup("nova"); ok {
 				modelDec = append(modelDec, dec{
 					index: i,
 					key:   key,

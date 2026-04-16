@@ -5,12 +5,12 @@ import (
 	"strconv"
 	"time"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/laoin114514/NovaBot/message"
 )
 
 func init() {
-	zero.OnCommand("napcat_test").Handle(func(ctx *zero.Ctx) {
+	nova.OnCommand("napcat_test").Handle(func(ctx *nova.Ctx) {
 		ctx.SendChain(message.Text("== NapCat API Test Start =="))
 
 		uid := strconv.Itoa(int(ctx.Event.UserID))

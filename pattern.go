@@ -249,7 +249,7 @@ func NewImageParser() Parser {
 	}
 }
 
-// Reply type zero.PatternReplyMatched
+// Reply type nova.PatternReplyMatched
 func (p *Pattern) Reply() *Pattern {
 	p.Add("reply", false, NewReplyParser())
 	return p

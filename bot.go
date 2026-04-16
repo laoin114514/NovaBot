@@ -20,12 +20,12 @@ import (
 )
 
 const (
-	StateKeyPrefixKeep     = "__zerobot_keep_"
-	StateKeyEventIndex     = StateKeyPrefixKeep + "_zerobot_ev_idx__"
-	stateKeyNoLogMseeageID = "__zerobot_no_log_mseeage_id__"
+	StateKeyPrefixKeep     = "__novabot_keep_"
+	StateKeyEventIndex     = StateKeyPrefixKeep + "_novabot_ev_idx__"
+	stateKeyNoLogMseeageID = "__novabot_no_log_mseeage_id__"
 )
 
-// Config is config of zero bot
+// Config is config of nova bot
 type Config struct {
 	NickName        []string      `json:"nickname"`           // 机器人名称
 	CommandPrefix   string        `json:"command_prefix"`     // 触发命令

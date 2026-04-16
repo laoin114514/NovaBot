@@ -33,7 +33,7 @@ func fakeCtx(msg message.Message) *Ctx {
 
 // copy from extension.PatternModel
 type PatternModel struct {
-	Matched []PatternParsed `zero:"pattern_matched"`
+	Matched []PatternParsed `nova:"pattern_matched"`
 }
 
 // Test Match
@@ -48,8 +48,8 @@ func TestPattern_Text(t *testing.T) {
 		{[]message.Segment{message.Text("aaa")}, NewPattern(nil).Text("not match"), false},
 		{[]message.Segment{message.Image("not a image")}, NewPattern(nil).Text("not match"), false},
 		{[]message.Segment{message.At(114514)}, NewPattern(nil).Text("not match"), false},
-		{[]message.Segment{message.Text("你说的对但是ZeroBot-Plugin 是 ZeroBot 的 实用插件合集")}, NewPattern(nil).Text("实用插件合集"), true},
-		{[]message.Segment{message.Text("你说的对但是ZeroBot-Plugin 是 ZeroBot 的 实用插件合集")}, NewPattern(nil).Text("nonono"), false},
+		{[]message.Segment{message.Text("你说的对但是novaBot-Plugin 是 novaBot 的 实用插件合集")}, NewPattern(nil).Text("实用插件合集"), true},
+		{[]message.Segment{message.Text("你说的对但是novaBot-Plugin 是 novaBot 的 实用插件合集")}, NewPattern(nil).Text("nonono"), false},
 	}
 	for i, v := range textTests {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {

@@ -40,10 +40,10 @@ var testState = State{
 var testCtx = &Ctx{State: testState}
 
 type testModel struct {
-	Hello string  `zero:"hello"`
-	Pkg   int32   `zero:"pkg"`
-	Help  pt      `zero:"help"`
-	Love  float64 `zero:"love"`
+	Hello string  `nova:"hello"`
+	Pkg   int32   `nova:"pkg"`
+	Help  pt      `nova:"help"`
+	Love  float64 `nova:"love"`
 }
 
 func BenchmarkState_Parse(b *testing.B) {

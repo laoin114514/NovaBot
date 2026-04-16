@@ -17,7 +17,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/laoin114514/NovaBot/utils/helper"
 )
 
@@ -141,13 +141,13 @@ func (wss *WSServer) any(w http.ResponseWriter, r *http.Request) {
 		conn:   conn,
 		selfID: rsp.SelfID,
 	}
-	zero.APICallers.Store(rsp.SelfID, c) // 添加Caller到 APICaller list...
+	nova.APICallers.Store(rsp.SelfID, c) // 添加Caller到 APICaller list...
 	log.Infof("[wss] 连接Websocket服务器: %s 成功, 账号: %d", wss.URL, rsp.SelfID)
 	wss.caller <- c
 }
 
 // Listen 开始监听事件
-func (wss *WSServer) Listen(handler func([]byte, zero.APICaller)) {
+func (wss *WSServer) Listen(handler func([]byte, nova.APICaller)) {
 	mux := http.ServeMux{}
 	mux.HandleFunc("/", wss.any)
 	go func() {
@@ -170,11 +170,11 @@ func (wss *WSServer) Listen(handler func([]byte, zero.APICaller)) {
 	}
 }
 
-func (wssc *WSSCaller) listen(handler func([]byte, zero.APICaller)) {
+func (wssc *WSSCaller) listen(handler func([]byte, nova.APICaller)) {
 	for {
 		t, payload, err := wssc.conn.ReadMessage()
 		if err != nil { // reconnect
-			zero.APICallers.Delete(wssc.selfID) // 断开从apicaller中删除
+			nova.APICallers.Delete(wssc.selfID) // 断开从apicaller中删除
 			log.Warnln("[wss] Websocket服务器连接断开, 账号:", wssc.selfID)
 			return
 		}
@@ -189,7 +189,7 @@ func (wssc *WSSCaller) listen(handler func([]byte, zero.APICaller)) {
 				if msg == "" {
 					msg = rsp.Get("msg").Str
 				}
-				c <- zero.APIResponse{ // 发送api调用响应
+				c <- nova.APIResponse{ // 发送api调用响应
 					Status:  rsp.Get("status").String(),
 					Data:    rsp.Get("data"),
 					Message: msg,
@@ -214,8 +214,8 @@ func (wssc *WSSCaller) nextSeq() uint64 {
 }
 
 // CallAPI 发送ws请求
-func (wssc *WSSCaller) CallAPI(c context.Context, req zero.APIRequest) (zero.APIResponse, error) {
-	ch := make(chan zero.APIResponse, 1)
+func (wssc *WSSCaller) CallAPI(c context.Context, req nova.APIRequest) (nova.APIResponse, error) {
+	ch := make(chan nova.APIResponse, 1)
 	req.Echo = wssc.nextSeq()
 	wssc.seqMap.Store(req.Echo, ch)
 

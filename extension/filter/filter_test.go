@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/stretchr/testify/assert"
 	"github.com/tidwall/gjson"
 )
@@ -16,11 +16,11 @@ func TestFilter(t *testing.T) {
 	}
 	b, _ := json.Marshal(e)
 	rawEvent := gjson.ParseBytes(b)
-	event := &zero.Event{
+	event := &nova.Event{
 		RawEvent: rawEvent,
 	}
 	result := New(
-		func(ctx *zero.Ctx) gjson.Result {
+		func(ctx *nova.Ctx) gjson.Result {
 			return ctx.Event.RawEvent
 		},
 		NewField("post_type").Any(
@@ -32,6 +32,6 @@ func TestFilter(t *testing.T) {
 		NewField("user_id").All(
 			NotEqual("abs"),
 		),
-	)(&zero.Ctx{Event: event})
+	)(&nova.Ctx{Event: event})
 	assert.Equal(t, true, result)
 }

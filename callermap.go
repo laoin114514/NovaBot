@@ -26,7 +26,7 @@ import (
 // sets of keys. In these two cases, use of a Map may significantly reduce lock
 // contention compared to a Go map paired with a separate Mutex or RWMutex.
 //
-// The zero Map is empty and ready for use. A Map must not be copied after first use.
+// The nova Map is empty and ready for use. A Map must not be copied after first use.
 type callerMap struct {
 	mu sync.Mutex
 

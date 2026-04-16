@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"sync"
 
-	zero "github.com/laoin114514/NovaBot"
+	nova "github.com/laoin114514/NovaBot"
 	"github.com/laoin114514/NovaBot/extension"
 	"github.com/laoin114514/NovaBot/extension/kv"
 	"github.com/laoin114514/NovaBot/message"
@@ -64,8 +64,8 @@ func (m *Manager) Disable(groupID int64) {
 }
 
 // Handler 返回 预处理器
-func (m *Manager) Handler() zero.Rule {
-	return func(ctx *zero.Ctx) bool {
+func (m *Manager) Handler() nova.Rule {
+	return func(ctx *nova.Ctx) bool {
 		m.RLock()
 		ctx.State["manager"] = m
 		if st, ok := m.states[ctx.Event.GroupID]; ok {
@@ -145,10 +145,10 @@ func unpack(v []byte) map[int64]bool {
 }
 
 func init() {
-	engine := zero.New()
+	engine := nova.New()
 
-	engine.OnCommandGroup([]string{"启用", "enable"}, zero.AdminPermission, zero.OnlyGroup).
-		Handle(func(ctx *zero.Ctx) {
+	engine.OnCommandGroup([]string{"启用", "enable"}, nova.AdminPermission, nova.OnlyGroup).
+		Handle(func(ctx *nova.Ctx) {
 			model := extension.CommandModel{}
 			_ = ctx.Parse(&model)
 			service, ok := Lookup(model.Args)
@@ -159,8 +159,8 @@ func init() {
 			ctx.Send(message.Text("已启用服务: " + model.Args))
 		})
 
-	engine.OnCommandGroup([]string{"禁用", "disable"}, zero.AdminPermission, zero.OnlyGroup).
-		Handle(func(ctx *zero.Ctx) {
+	engine.OnCommandGroup([]string{"禁用", "disable"}, nova.AdminPermission, nova.OnlyGroup).
+		Handle(func(ctx *nova.Ctx) {
 			model := extension.CommandModel{}
 			_ = ctx.Parse(&model)
 			service, ok := Lookup(model.Args)
@@ -171,8 +171,8 @@ func init() {
 			ctx.Send(message.Text("已关闭服务: " + model.Args))
 		})
 
-	engine.OnCommandGroup([]string{"服务列表", "service_list"}, zero.AdminPermission, zero.OnlyGroup).
-		Handle(func(ctx *zero.Ctx) {
+	engine.OnCommandGroup([]string{"服务列表", "service_list"}, nova.AdminPermission, nova.OnlyGroup).
+		Handle(func(ctx *nova.Ctx) {
 			msg := `---服务列表---`
 			i := 0
 			ForEach(func(key string, _ *Manager) bool {
