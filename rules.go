@@ -33,15 +33,24 @@ func Type(typ string) Rule {
 // 检查消息前缀
 func PrefixRule(prefixes ...string) Rule {
 	return func(ctx *Ctx) bool {
-		msg := ctx.MessageString()
-		if msg == "" {
+		if len(ctx.Event.Message) == 0 {
 			return false
 		}
-		for _, prefix := range prefixes {
-			if strings.HasPrefix(msg, prefix) {
-				ctx.State["prefix"] = prefix
-				ctx.State["args"] = strings.TrimLeft(msg[len(prefix):], " ")
-				return true
+		for i, seg := range ctx.Event.Message {
+			if seg.Type != "text" {
+				continue
+			}
+			text := seg.Data["text"]
+			for _, prefix := range prefixes {
+				if strings.HasPrefix(text, prefix) {
+					ctx.State["prefix"] = prefix
+					arg := strings.TrimLeft(text[len(prefix):], " ")
+					if i+1 < len(ctx.Event.Message) {
+						arg += ctx.Event.Message[i+1:].ExtractPlainText()
+					}
+					ctx.State["args"] = arg
+					return true
+				}
 			}
 		}
 		return false
@@ -53,13 +62,26 @@ func PrefixRule(prefixes ...string) Rule {
 // 检查消息后缀
 func SuffixRule(suffixes ...string) Rule {
 	return func(ctx *Ctx) bool {
-		msg := ctx.MessageString()
-		for _, suffix := range suffixes {
-			if strings.HasSuffix(msg, suffix) {
-				ctx.State["suffix"] = suffix
-				arg := strings.TrimRight(msg[:len(msg)-len(suffix)], " ")
-				ctx.State["args"] = arg
-				return true
+		mLen := len(ctx.Event.Message)
+		if mLen <= 0 {
+			return false
+		}
+		for i := mLen - 1; i >= 0; i-- {
+			seg := ctx.Event.Message[i]
+			if seg.Type != "text" {
+				continue
+			}
+			text := seg.Data["text"]
+			for _, suffix := range suffixes {
+				if strings.HasSuffix(text, suffix) {
+					ctx.State["suffix"] = suffix
+					arg := strings.TrimRight(text[:len(text)-len(suffix)], " ")
+					if i > 0 {
+						arg = ctx.Event.Message[:i].ExtractPlainText() + arg
+					}
+					ctx.State["args"] = arg
+					return true
+				}
 			}
 		}
 		return false
@@ -69,16 +91,28 @@ func SuffixRule(suffixes ...string) Rule {
 // CommandRule check if the message is a command and trim the command name
 func CommandRule(commands ...string) Rule {
 	return func(ctx *Ctx) bool {
-		msg := ctx.MessageString()
-		if !strings.HasPrefix(msg, BotConfig.CommandPrefix) {
+		if len(ctx.Event.Message) == 0 {
 			return false
 		}
-		cmdMessage := msg[len(BotConfig.CommandPrefix):]
-		for _, command := range commands {
-			if strings.HasPrefix(cmdMessage, command) {
-				ctx.State["command"] = command
-				ctx.State["args"] = strings.TrimLeft(cmdMessage[len(command):], " ")
-				return true
+		for i, seg := range ctx.Event.Message {
+			if seg.Type != "text" {
+				continue
+			}
+			text := seg.Data["text"]
+			if !strings.HasPrefix(text, BotConfig.CommandPrefix) {
+				continue
+			}
+			cmdMessage := text[len(BotConfig.CommandPrefix):]
+			for _, command := range commands {
+				if strings.HasPrefix(cmdMessage, command) {
+					ctx.State["command"] = command
+					arg := strings.TrimLeft(cmdMessage[len(command):], " ")
+					if i+1 < len(ctx.Event.Message) {
+						arg += ctx.Event.Message[i+1:].ExtractPlainText()
+					}
+					ctx.State["args"] = arg
+					return true
+				}
 			}
 		}
 		return false
