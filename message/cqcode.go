@@ -62,3 +62,34 @@ func (m Message) ExtractPlainText() string {
 	}
 	return sb.String()
 }
+
+// Text returns all concatenated plain-text segments.
+func (m Message) Text() string {
+	return m.ExtractPlainText()
+}
+
+// ReplaceWithText replaces the whole message with a single text segment.
+func (m *Message) ReplaceWithText(src string) {
+	if m == nil {
+		return
+	}
+	*m = Message{Text(src)}
+}
+
+// SetFirstText updates the first text segment and returns whether it succeeded.
+func (m *Message) SetFirstText(src string) bool {
+	if m == nil {
+		return false
+	}
+	for i := range *m {
+		if (*m)[i].Type != "text" {
+			continue
+		}
+		if (*m)[i].Data == nil {
+			(*m)[i].Data = map[string]string{}
+		}
+		(*m)[i].Data["text"] = src
+		return true
+	}
+	return false
+}

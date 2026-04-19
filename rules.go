@@ -57,6 +57,34 @@ func PrefixRule(prefixes ...string) Rule {
 	}
 }
 
+// PrefixRuleAndRemove 检查消息前缀并删除命中的前缀文本。
+func PrefixRuleAndRemove(prefixes ...string) Rule {
+	return func(ctx *Ctx) bool {
+		if len(ctx.Event.Message) == 0 {
+			return false
+		}
+		for i, seg := range ctx.Event.Message {
+			if seg.Type != "text" {
+				continue
+			}
+			text := seg.Data["text"]
+			for _, prefix := range prefixes {
+				if !strings.HasPrefix(text, prefix) {
+					continue
+				}
+				ctx.State["prefix"] = prefix
+				arg := strings.TrimLeft(text[len(prefix):], " ")
+				if i+1 < len(ctx.Event.Message) {
+					arg += ctx.Event.Message[i+1:].ExtractPlainText()
+				}
+				ctx.State["args"] = arg
+				return ctx.Event.Message.SetFirstText(strings.TrimPrefix(text, prefix))
+			}
+		}
+		return false
+	}
+}
+
 // SuffixRule check if the message has the suffix and trim the suffix
 //
 // 检查消息后缀
@@ -88,6 +116,40 @@ func SuffixRule(suffixes ...string) Rule {
 	}
 }
 
+// SuffixRuleAndRemove 检查消息后缀并删除命中的后缀文本。
+func SuffixRuleAndRemove(suffixes ...string) Rule {
+	return func(ctx *Ctx) bool {
+		mLen := len(ctx.Event.Message)
+		if mLen <= 0 {
+			return false
+		}
+		for i := mLen - 1; i >= 0; i-- {
+			seg := ctx.Event.Message[i]
+			if seg.Type != "text" {
+				continue
+			}
+			text := seg.Data["text"]
+			for _, suffix := range suffixes {
+				if !strings.HasSuffix(text, suffix) {
+					continue
+				}
+				ctx.State["suffix"] = suffix
+				arg := strings.TrimRight(text[:len(text)-len(suffix)], " ")
+				if i > 0 {
+					arg = ctx.Event.Message[:i].ExtractPlainText() + arg
+				}
+				ctx.State["args"] = arg
+				if ctx.Event.Message[i].Data == nil {
+					ctx.Event.Message[i].Data = map[string]string{}
+				}
+				ctx.Event.Message[i].Data["text"] = strings.TrimSuffix(text, suffix)
+				return true
+			}
+		}
+		return false
+	}
+}
+
 // CommandRule check if the message is a command and trim the command name
 func CommandRule(commands ...string) Rule {
 	return func(ctx *Ctx) bool {
@@ -113,6 +175,42 @@ func CommandRule(commands ...string) Rule {
 					ctx.State["args"] = arg
 					return true
 				}
+			}
+		}
+		return false
+	}
+}
+
+// CommandRuleAndRemove 检查命令并删除命中的命令前缀和命令名。
+func CommandRuleAndRemove(commands ...string) Rule {
+	return func(ctx *Ctx) bool {
+		if len(ctx.Event.Message) == 0 {
+			return false
+		}
+		for i, seg := range ctx.Event.Message {
+			if seg.Type != "text" {
+				continue
+			}
+			text := seg.Data["text"]
+			if !strings.HasPrefix(text, BotConfig.CommandPrefix) {
+				continue
+			}
+			cmdMessage := text[len(BotConfig.CommandPrefix):]
+			for _, command := range commands {
+				if !strings.HasPrefix(cmdMessage, command) {
+					continue
+				}
+				ctx.State["command"] = command
+				arg := strings.TrimLeft(cmdMessage[len(command):], " ")
+				if i+1 < len(ctx.Event.Message) {
+					arg += ctx.Event.Message[i+1:].ExtractPlainText()
+				}
+				ctx.State["args"] = arg
+				if ctx.Event.Message[i].Data == nil {
+					ctx.Event.Message[i].Data = map[string]string{}
+				}
+				ctx.Event.Message[i].Data["text"] = strings.TrimPrefix(text, BotConfig.CommandPrefix+command)
+				return true
 			}
 		}
 		return false
@@ -175,6 +273,21 @@ func FullMatchRule(src ...string) Rule {
 		for _, str := range src {
 			if str == msg {
 				ctx.State["matched"] = msg
+				return true
+			}
+		}
+		return false
+	}
+}
+
+// FullMatchRuleAndRemove 检查消息是否完整匹配，并在命中后清空整条文本消息。
+func FullMatchRuleAndRemove(src ...string) Rule {
+	return func(ctx *Ctx) bool {
+		msg := ctx.MessageString()
+		for _, str := range src {
+			if str == msg {
+				ctx.State["matched"] = msg
+				ctx.Event.Message.ReplaceWithText("")
 				return true
 			}
 		}
